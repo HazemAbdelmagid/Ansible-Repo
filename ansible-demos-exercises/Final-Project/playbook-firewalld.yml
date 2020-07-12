@@ -1,0 +1,14 @@
+-
+  name: Install Firewalld
+  hosts: target2
+  tasks:
+   - name: Install the package
+     yum:
+       name: firewalld
+       state: present
+
+   - name: Start Firewalld
+     service:
+       name: firewalld
+       enabled: true
+       state: started
