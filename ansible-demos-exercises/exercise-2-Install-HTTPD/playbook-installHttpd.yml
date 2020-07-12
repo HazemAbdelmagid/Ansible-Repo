@@ -1,0 +1,17 @@
+-
+  name: 'Install and Start HTTPD'
+  hosts: all
+  tasks:
+    -
+      name: 'Know the Date'
+      command: date
+    -
+      name: 'Install HTTPD'
+      yum:
+        name: httpd
+        state: present
+    -
+      name: 'Start HTTPD'
+      service:
+        name: httpd
+        state: started

@@ -1,0 +1,12 @@
+-
+  name: 'Copy file to target servers'
+  hosts: all
+  tasks:
+    - 
+      name: 'copy file'
+      copy:
+        src: /home/tux/ansible-demos-exercises/exercise-3-copy-execute-script/script.sh
+        dest: /home/tux
+    -
+      name: 'execute script'
+      script: script.sh
