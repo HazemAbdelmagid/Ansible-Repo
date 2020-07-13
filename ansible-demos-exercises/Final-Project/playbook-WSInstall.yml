@@ -1,0 +1,34 @@
+-
+  name: Install & Configure httpd
+  hosts: target2
+  vars:
+    packages:
+     - httpd
+     - php
+     - php-mysql    
+  tasks:
+    - name: Install httpd packages
+      yum:
+        name: '{{ packages }}'
+        state: present
+    
+    - name: Adjust Firewalld Configuration
+      firewalld:
+        port: 80/tcp
+        zone: public
+        permanent: yes
+        state: enabled
+
+    - name: Reload Firewalld changes
+      service:
+        name: firewalld
+        state: reloaded
+    
+    - name: Modify httpd configuration file
+      command: sed -i 's/index.html/index.php/g' /etc/httpd/conf/httpd.conf
+
+    - name: Start & Enable httpd
+      service:
+        name: httpd
+        enabled: true
+        state: started      

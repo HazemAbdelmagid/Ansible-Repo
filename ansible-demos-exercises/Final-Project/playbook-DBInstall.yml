@@ -1,20 +1,18 @@
-# remain flush privilages and run the sql script
-# also the http
 - 
   name: Install & Configure MariaDB
   hosts: target2
   tasks:
-    - name: Install dependencies
+    - name: Install Mariadb dependency
       yum:
         name: MySQL-python
         state: present
     
-    - name: Install The Package
+    - name: Install Mariadb-Server Package
       yum:
         name: mariadb-server
         state: present
     
-    - name: Start The Service
+    - name: Start Mariadb Service
       service:
         name: mariadb
         enabled: true
@@ -29,7 +27,7 @@
     - service:
         name: firewalld
         state: reloaded
-
+    
     - name: Create a new DB
       mysql_db:
         name: ecomdb
@@ -41,3 +39,14 @@
         password: ecompassword
         priv: '*.*:ALL'
         state: present
+
+    - name: Run a script
+      script: /home/tux/ansible-local-repo/ansible-demos-exercises/Final-Project/Flush-Priv.sh
+
+    - name: Copy Sql Script File to /tmp Dir
+      copy:
+        src: /home/tux/ansible-local-repo/ansible-demos-exercises/Final-Project/db-load-script.sql
+        dest: /tmp/db-load-script.sql
+    
+    - name: Run Bash Script to insert data to the table
+      script: /home/tux/ansible-local-repo/ansible-demos-exercises/Final-Project/MySql-Script.sh

@@ -1,0 +1,17 @@
+-
+  name: Install & Configure GIT
+  hosts: target2
+  tasks: 
+    - name: Install GIT
+      yum:
+        name: git
+        state: present
+    
+    - name: Clone a repo
+      git: 
+        repo: https://github.com/kodekloudhub/learning-app-ecommerce.git
+        dest: /var/www/html/
+        force: yes
+
+    - name: Configure index.php file
+      command: sed -i 's/172.20.1.101/localhost/g' /var/www/html/index.php
