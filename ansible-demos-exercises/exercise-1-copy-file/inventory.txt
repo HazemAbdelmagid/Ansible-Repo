@@ -1,6 +1,6 @@
-target1 ansible_host=192.168.1.7 ansible_ssh_pass=tux
-target2 ansible_host=192.168.1.8 ansible_ssh_pass=tux
+target1 ansible_host=192.168.1.28 ansible_ssh_pass=tux
+target2 ansible_host=192.168.1.29 ansible_ssh_pass=tux
 
 
-#target1 ansible_host=192.168.1.7 ansible_user=root ansible_ssh_pass=root
-#target2 ansible_host=192.168.1.8 ansible_user=root ansible_ssh_pass=root
+#target1 ansible_host=192.168.1.28 ansible_user=root ansible_ssh_pass=root
+#target2 ansible_host=192.168.1.29 ansible_user=root ansible_ssh_pass=root
