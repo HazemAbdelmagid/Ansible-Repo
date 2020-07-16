@@ -1,0 +1,87 @@
+-
+  name: Web Server Installation & Configuration on Single Node
+  hosts: localhost
+  vars:
+    packages:
+     - firewalld 
+     - MySQL-python
+     - mariadb-server
+     - httpd
+     - php
+     - php-mysql
+     - git
+  tasks:
+    - name: LAMP, Firewall & Git Installation
+      yum:
+        name: '{{ packages }}'
+        state: present
+    
+    - name: Start firewall service
+      service:
+        name: firewalld
+        enabled: true
+        state: started
+        
+    - name: Start mariadb service
+      service:
+        name: mariadb
+        enabled: true
+        state: started
+
+    - name: Start httpd service
+      service:
+        name: httpd
+        enabled: true
+        state: started
+
+    - name: Adjust Firewall Configuration
+      firewalld:
+        port: 80-3306/tcp
+        zone: public
+        permanent: yes
+        state: enabled
+        
+    - name: Reload Firewall Configuration
+      service:
+        name: firewalld
+        state: reloaded
+        
+    - name: Create a new mariaDB
+      mysql_db:
+        name: ecomdb
+        state: present
+
+    - name: Create new mariaDB user
+      mysql_user:
+        name: ecomuser
+        password: ecompassword
+        priv: '*.*:ALL'
+        state: present
+
+    - name: Run script to flush privileges.
+      script: /home/tux/ansible-local-repo/ansible-demos-exercises/Final-Project/Flush-Priv.sh
+
+    - name: Copy Sql Script File to /tmp Dir
+      copy:
+        src: /home/tux/ansible-local-repo/ansible-demos-exercises/Final-Project/db-load-script.sql
+        dest: /tmp/db-load-script.sql
+
+    - name: Run SQL Script to insert data to the table
+      script: /home/tux/ansible-local-repo/ansible-demos-exercises/Final-Project/MySql-Script.sh
+      
+    - name: Clone a repo
+      git:
+        repo: https://github.com/kodekloudhub/learning-app-ecommerce.git
+        dest: /var/www/html/
+        force: yes
+    
+    - name: Modify httpd configuration file
+      command: sed -i 's/index.html/index.php/g' /etc/httpd/conf/httpd.conf
+      
+    - name: Configure index.php file
+      command: sed -i 's/172.20.1.101/localhost/g' /var/www/html/index.php
+    
+    - name: Restart httpd
+      service:
+        name: httpd
+        state: restarted
